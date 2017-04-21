@@ -2,10 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Router, Route, HashRouter } from 'react-router-dom';
 import { createHashHistory } from 'history';
-import {App} from './аpp';
-import {HomeComponent} from './components/home/home.component';
-import {LoginComponent} from './components/login/login.component';
-import {LogoutComponent} from './components/login/logout.component';
+import { App } from './аpp';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { LogoutComponent } from './components/login/logout.component';
+import { RegisterComponent } from './components/register/register.component';
 
 const history = createHashHistory();
 
@@ -16,6 +17,7 @@ ReactDOM.render(
         <Route exact={true} path="/" component={HomeComponent} />
         <Route path="/login" component={LoginComponent} />
         <Route path="/logout" component={LogoutComponent} />
+        <Route path="/register" component={RegisterComponent} />
         {/*<Route path='*' component={NotFound} />*/}
       </App>
     </Router>

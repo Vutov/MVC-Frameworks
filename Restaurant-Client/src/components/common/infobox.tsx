@@ -34,6 +34,8 @@ export default class Infobox extends React.Component<any, any> {
                     errorMsg = "Cannot connect due to network error.";
                 if (response.responseJSON && response.responseJSON.error_description)
                     errorMsg = response.responseJSON.error_description;
+                if (response.responseJSON && response.responseJSON.modelState)
+                    // errorMsg = response.responseJSON.error_description; // TODO Binding Jquery element and put in lable or somethin`
                 this.showError(errorMsg);
             }.bind(this)
         });

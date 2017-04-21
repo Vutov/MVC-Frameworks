@@ -14,37 +14,43 @@ function saveSession(userInfo) {
 // user/login
 function login(username, password, callback) {
     let userData = {
-        username,
-        password,
+        Username: username,
+        Password: password,
         grant_type: "password"
     };
 
     post('account', 'login', userData)
-        .then(loginSuccess);
-
-    function loginSuccess(userInfo) {
+        .then(function loginSuccess(userInfo) {
         saveSession(userInfo);
         observer.showSuccess('Login successful.');
         callback(true);
-    }
+    });
 }
 
 // user/register
-function register(username, password, name, callback) {
+function register(username, password, confirmPassword, email, callback) {
     let userData = {
-        name,
-        username,
-        password
+        Username: username,
+        Password: password,
+        ConfirmPassword: confirmPassword,
+        Email: email
     };
 
-    post('user', '', userData, 'basic')
-        .then(registerSuccess);
+    post('account', 'register', userData, '')
+        .then(function () {
+            observer.showSuccess('User registration successful.');
+            let loginData = {
+                Username: username,
+                Password: password,
+                grant_type: "password"
+            }
 
-    function registerSuccess(userInfo) {
-        observer.showSuccess('User registration successful.');
-        saveSession(userInfo);
-        callback(true);
-    }
+            post('account', 'login', loginData)
+                .then(function (userInfo) {
+                    saveSession(userInfo);
+                    callback(true);
+                });
+        });
 }
 
 // user/logout

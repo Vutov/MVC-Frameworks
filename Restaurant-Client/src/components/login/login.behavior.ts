@@ -1,4 +1,3 @@
-import { Redirect } from 'react-router-dom'
 import {login, logout} from '../../services/user'
 
 export class LoginBehavior {
