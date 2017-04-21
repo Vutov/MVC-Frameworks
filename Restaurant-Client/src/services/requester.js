@@ -6,34 +6,39 @@ function makeAuth(type) {
     switch (type) {
         case 'basic':
             return "Bearer " + sessionStorage.authToken;
-        default: break;
+        default: return null
     }
 }
 
 function get(module, uri, auth) {
-    const url = apiUrl + module + "/"  + uri;
-    const authHeaders = makeAuth(auth);
-
-    return $.ajax({
+    let request = {
         method: "GET",
-        url: url,
-        headers: authHeaders
-    });
+        url: apiUrl + module + "/" + uri
+    };
+
+    const authHeaders = makeAuth(auth);
+    if (authHeaders !== null) {
+        request.headers = authHeaders
+    }
+
+    return $.ajax(request);
 }
 
 function post(module, uri, data, auth) {
-    const url = apiUrl + module + "/" + uri;
-    const authHeaders = makeAuth(auth);
-
     let request = {
         method: "POST",
-        url: url,
-        headers: authHeaders
+        url: apiUrl + module + "/" + uri
     };
+
+    const authHeaders = makeAuth(auth);
+    if (authHeaders !== null) {
+        request.headers = authHeaders
+    }
 
     if (data !== null) {
         request.data = data;
     }
+    
     return $.ajax(request);
 }
 
@@ -62,4 +67,4 @@ function update(module, uri, data, auth) {
     return $.ajax(request);
 }
 
-export {get, post, update, del};
+export { get, post, update, del };

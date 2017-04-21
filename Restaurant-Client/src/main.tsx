@@ -7,6 +7,7 @@ import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { LogoutComponent } from './components/login/logout.component';
 import { RegisterComponent } from './components/register/register.component';
+import { RestaurantsAddComponent } from './components/restaurants/restaurants-add.component';
 
 const history = createHashHistory();
 
@@ -18,6 +19,7 @@ ReactDOM.render(
         <Route path="/login" component={LoginComponent} />
         <Route path="/logout" component={LogoutComponent} />
         <Route path="/register" component={RegisterComponent} />
+        <Route path="/restaurants" component={RestaurantsAddComponent} />
         {/*<Route path='*' component={NotFound} />*/}
       </App>
     </Router>

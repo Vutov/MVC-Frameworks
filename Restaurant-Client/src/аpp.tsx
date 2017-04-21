@@ -38,7 +38,7 @@ export class App extends React.Component<any, any> {
             navbar = (
                 <header id="menu">
                     <Link to="/" className="useronly" id="linkMenuUserHome">Home</Link>
-                    <Link to="/shop" className="useronly" id="linkMenuShop">Shop</Link>
+                    <Link to="/restaurants" className="useronly" id="linkMenuShop">Restaurants</Link>
                     <Link to="/cart" className="useronly" id="linkMenuCart">Cart</Link>
                     <Link to="/logout" className="useronly" id="linkMenuLogout">Logout</Link>
                     <Greeting user={this.state.username} />

@@ -147,5 +147,18 @@
 
             return this.Ok(viewModel);
         }
+
+        [Route("towns")]
+        public IHttpActionResult GetTownsForRestaurants()
+        {
+            var towns = this.Data.Towns.All();
+            
+            var viewModel = towns.AsQueryable()
+                .Select(TownViewModel.Create)
+                .OrderBy(m => m.Id)
+                .ThenBy(m => m.Name);
+
+            return this.Ok(viewModel);
+        }
     }
 }
