@@ -160,5 +160,18 @@
 
             return this.Ok(viewModel);
         }
+
+        [Route("")]
+        public IHttpActionResult GetRestaurants()
+        {
+            var restaurants = this.Data.Restaurants.All();
+
+            var viewModel = restaurants.AsQueryable()
+                .Select(RestaurantViewModel.Create)
+                .OrderBy(m => m.Id)
+                .ThenBy(m => m.Name);
+
+            return this.Ok(viewModel);
+        }
     }
 }

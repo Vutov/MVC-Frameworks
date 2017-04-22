@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { RestaurantsAddBehavior } from './restaurants-add.behavior'
+import { RestaurantsBehavior } from './restaurants.behavior'
 import { RestaurantsAddProps } from './restaurants-add.model'
 
 export class RestaurantsAddComponent extends React.Component<RestaurantsAddProps, any> {
@@ -9,10 +9,11 @@ export class RestaurantsAddComponent extends React.Component<RestaurantsAddProps
 
         this.state = {
             towns: [],
-            townID: undefined
+            townID: undefined,
+            restaurantName: undefined
         }
     }
-    private behavior: RestaurantsAddBehavior = new RestaurantsAddBehavior()
+    private behavior: RestaurantsBehavior = new RestaurantsBehavior()
 
     componentDidMount() {
         this.behavior.getTowns(function (data) {
@@ -28,22 +29,25 @@ export class RestaurantsAddComponent extends React.Component<RestaurantsAddProps
 
     onSubmitHandler(event) {
         event.preventDefault();
-        // this.behavior.register(this.state.username, this.state.password, this.state.confirmPassword, this.state.email, function(){
-        //   this.props.history.push('/');
-        // }.bind(this));
+        this.behavior.addRestaurant(this.state.restaurantName, this.state.townID);
     }
 
     render() {
         return (
             <section>
-                <select name='townID' onChange={this.onChangeHandler.bind(this)}>
-                    {
-                        this.state.towns.map(function (town) {
-                            return <option key={town.id} value={town.id}>{town.name}</option>
-                        }.bind(this))
-                    }
-                </select>
-
+                <form id="formAddRestaurant" onSubmit={this.onSubmitHandler.bind(this)}>
+                    <label htmlFor="townID">City</label>
+                    <select name='townID' onChange={this.onChangeHandler.bind(this)}>
+                        {
+                            this.state.towns.map(function (town) {
+                                return <option key={town.id} value={town.id}>{town.name}</option>
+                            }.bind(this))
+                        }
+                    </select>
+                    <label htmlFor="restaurantName">Name</label>
+                    <input type="text" name='restaurantName' onChange={this.onChangeHandler.bind(this)} />
+                    <input type="submit" value="Save" />
+                </form>
             </section>
         )
     }

@@ -25,9 +25,14 @@ function get(module, uri, auth) {
 }
 
 function post(module, uri, data, auth) {
+    let url = apiUrl + module;
+    if (uri) {
+        url += "/" + uri
+    }
+
     let request = {
         method: "POST",
-        url: apiUrl + module + "/" + uri
+        url: url
     };
 
     const authHeaders = makeAuth(auth);
@@ -38,7 +43,7 @@ function post(module, uri, data, auth) {
     if (data !== null) {
         request.data = data;
     }
-    
+
     return $.ajax(request);
 }
 
