@@ -5,7 +5,7 @@ const apiUrl = "http://localhost:50156/api/";
 function makeAuth(type) {
     switch (type) {
         case 'basic':
-            return "Bearer " + sessionStorage.authToken;
+            return {Authorization: "Bearer " + sessionStorage.authToken};
         default: return null
     }
 }
