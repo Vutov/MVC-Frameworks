@@ -13,13 +13,8 @@ export class RestaurantsAddComponent extends React.Component<RestaurantsAddProps
             restaurantName: undefined
         }
     }
-    private behavior: RestaurantsBehavior = new RestaurantsBehavior()
 
-    componentDidMount() {
-        this.behavior.getTowns(function (data) {
-            this.setState({ towns: data, townID: data[0].id.toString() });
-        }.bind(this));
-    }
+    private behavior: RestaurantsBehavior = new RestaurantsBehavior()
 
     onChangeHandler(event) {
         let data = {};
@@ -29,7 +24,7 @@ export class RestaurantsAddComponent extends React.Component<RestaurantsAddProps
 
     onSubmitHandler(event) {
         event.preventDefault();
-        this.behavior.addRestaurant(this.state.restaurantName, this.state.townID);
+        this.behavior.addRestaurant(this.state.restaurantName, this.state.townID || this.props.defaultTownID, this.props.updateGrid);
     }
 
     render() {
@@ -39,7 +34,7 @@ export class RestaurantsAddComponent extends React.Component<RestaurantsAddProps
                     <label htmlFor="townID">City</label>
                     <select name='townID' onChange={this.onChangeHandler.bind(this)}>
                         {
-                            this.state.towns.map(function (town) {
+                            this.props.towns.map(function (town) {
                                 return <option key={town.id} value={town.id}>{town.name}</option>
                             }.bind(this))
                         }

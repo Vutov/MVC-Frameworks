@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { RestaurantsBehavior } from './restaurants.behavior'
-import { RestaurantsGridProps, RestaurantModel } from './restaurants-grid.model'
+import {Link} from 'react-router-dom';
+import { RestaurantsGridProps } from './restaurants-grid.model'
+import { IRestaurantModel } from "./restaurants.model";
 
 export class RestaurantsGridComponent extends React.Component<RestaurantsGridProps, any> {
 
@@ -8,19 +9,32 @@ export class RestaurantsGridComponent extends React.Component<RestaurantsGridPro
         super(props);
     }
 
-    private behavior: RestaurantsBehavior = new RestaurantsBehavior()
-
-    componentDidMount() {
-        this.behavior.getRestaurants(function (data: Array<RestaurantModel>) {
-            this.setState({ Restaurants: data });
-        }.bind(this));
-    }
-
     render() {
         return (
             <section>
                 <table>
-                    <tr>tesa</tr>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Restaurant Name</th>
+                        <th>Ratings</th>
+                        <th>Town Name</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        (this.props.restaurants || []).map(function (r : IRestaurantModel) {
+                            return (
+                                <tr key={r.id}>
+                                    <td>{r.id}</td>
+                                    <td>{r.name}</td>
+                                    <td>{r.ratings === 0 ? "no data" : r.ratings}</td>
+                                    <td><Link to={"/restaurants/" + r.townID}>{r.townName}</Link></td>
+                                </tr>
+                            )
+                        })
+                    }
+                    </tbody>
                 </table>
             </section>
         )

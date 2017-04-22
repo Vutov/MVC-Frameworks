@@ -1,5 +1,7 @@
 import { RouteComponentProps } from "react-router";
 
 export interface RestaurantsAddProps extends RouteComponentProps<any> {
-    towns: Array<string>
+    towns: Array<string>,
+    defaultTownID: number,
+    updateGrid: Function
 }
