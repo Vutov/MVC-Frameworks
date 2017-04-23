@@ -12,14 +12,31 @@
     [RoutePrefix("api/restaurants")]
     public class RestaurantsController : BaseController
     {
-        public RestaurantsController():base()
+        public RestaurantsController() : base()
         {
-            
+
         }
 
-        public RestaurantsController(IRestaurantData data, IUserIdProvider provider): base(data, provider)
+        public RestaurantsController(IRestaurantData data, IUserIdProvider provider) : base(data, provider)
         {
-            
+
+        }
+
+        [Route("")]
+        public IHttpActionResult GetRestaurant(int restaurantId)
+        {
+            var restourant = this.Data.Restaurants.GetById(restaurantId);
+            if (restourant == null)
+            {
+                return this.NotFound();
+            }
+
+            var viewModel = new List<Restaurant>() { restourant }.AsQueryable()
+                .Select(RestaurantViewModel.Create)
+                .OrderByDescending(r => r.Rating)
+                .ThenBy(r => r.Name)
+                .First();
+            return this.Ok(viewModel);
         }
 
         [Route("")]
@@ -152,7 +169,7 @@
         public IHttpActionResult GetTownsForRestaurants()
         {
             var towns = this.Data.Towns.All();
-            
+
             var viewModel = towns.AsQueryable()
                 .Select(TownViewModel.Create)
                 .OrderBy(m => m.Id)

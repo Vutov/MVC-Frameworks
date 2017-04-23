@@ -1,4 +1,4 @@
-import { post, get } from '../../services/requester';
+import { post, get, del } from '../../services/requester';
 import observer from '../../services/observer'
 import { RestaurantModel, IRestaurantModel } from "./restaurants.model";
 
@@ -64,5 +64,37 @@ export class RestaurantsBehavior {
                     callback(data);
                 }
             });
+    }
+
+    public getRestaurant(id: number, callback: Function) {
+        get('restaurants', '?restaurantid=' + id, 'basic')
+            .then(function (data) {
+                callback(data);
+            });
+    }
+
+    public rateRestaurant(stars: number, retaurantID: number, callback: Function) {
+        let body = {
+            Stars: stars
+        };
+
+        post('restaurants', retaurantID + '/rate', body, 'basic')
+            .then(function (data) {
+                callback(data);
+            });
+    }
+
+    public getMealsForRestaurant(retaurantID: number, callback: Function) {
+        get('restaurants', retaurantID + '/meals', 'basic')
+            .then(function (data) {
+                callback(data);
+            });
+    }
+
+    public deleteMeal(id: number, callback: Function) {
+        del("meals", id, 'basic')
+            .then(function () {
+                callback(true);
+            })
     }
 }

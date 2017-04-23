@@ -26,7 +26,7 @@ export class RestaurantsGridComponent extends React.Component<RestaurantsGridPro
                         (this.props.restaurants || []).map(function (r : IRestaurantModel) {
                             return (
                                 <tr key={r.id}>
-                                    <td>{r.id}</td>
+                                    <td><Link to={"/restaurant/" + r.id}>{r.id}</Link></td>
                                     <td>{r.name}</td>
                                     <td>{r.ratings === 0 ? "no data" : r.ratings}</td>
                                     <td><Link to={"/restaurants/" + r.townID}>{r.townName}</Link></td>

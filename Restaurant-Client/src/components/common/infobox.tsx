@@ -30,12 +30,18 @@ export default class Infobox extends React.Component<any, any> {
             }.bind(this),
             ajaxError: function (e, response) {
                 let errorMsg = JSON.stringify(response);
-                if (response.readyState === 0)
+                if (response.readyState === 0) {
                     errorMsg = "Cannot connect due to network error.";
-                if (response.responseJSON && response.responseJSON.error_description)
+                }
+                if (response.responseJSON && response.responseJSON.message) {
+                    errorMsg = response.responseJSON.message;
+                }
+                if (response.responseJSON && response.responseJSON.error_description) {
                     errorMsg = response.responseJSON.error_description;
-                if (response.responseJSON && response.responseJSON.modelState)
-                    // errorMsg = response.responseJSON.error_description; // TODO Binding Jquery element and put in lable or somethin`
+                }
+                if (response.responseJSON && response.responseJSON.modelState) {// errorMsg = response.responseJSON.error_description; // TODO Binding Jquery element and put in lable or somethin`
+                }
+
                 this.showError(errorMsg);
             }.bind(this)
         });

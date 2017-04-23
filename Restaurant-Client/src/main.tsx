@@ -9,6 +9,8 @@ import { LogoutComponent } from './components/login/logout.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RestaurantsComponent } from './components/restaurants/restaurants.component';
 import { RestaurantsTownComponent } from './components/restaurants/restaurants-town.component';
+import { RestaurantViewComponent } from './components/restaurants/restaurant-view.component';
+import { MealsComponent } from './components/meals/meals.component';
 
 const history = createHashHistory();
 
@@ -22,6 +24,8 @@ ReactDOM.render(
         <Route path="/register" component={RegisterComponent} />
         <Route exact={true} path="/restaurants" component={RestaurantsComponent} />
         <Route path="/restaurants/:townID" component={RestaurantsTownComponent} />
+        <Route path="/restaurant/:restaurantID" component={RestaurantViewComponent} />
+        <Route path="/meals" component={MealsComponent} />
         {/*<Route path='*' component={NotFound} />*/}
       </App>
     </Router>

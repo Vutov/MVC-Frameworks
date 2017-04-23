@@ -1,5 +1,6 @@
 ﻿namespace Restaurants.Services.Controllers
 {
+    using System.Linq;
     using System.Web.Http;
     using Microsoft.AspNet.Identity;
     using Models.BindingModels;
@@ -127,6 +128,17 @@
             {
                 Message = "Meal #" + id + " deleted."
             };
+
+            return this.Ok(viewModel);
+        }
+
+        [Route("types")]
+        public IHttpActionResult GetMealTypes()
+        {
+            var types = this.Data.MealTypes.All();
+            var viewModel = types.AsQueryable()
+                .Select(MealTypeViewModel.Create)
+                .OrderBy(m => m.Id);
 
             return this.Ok(viewModel);
         }

@@ -67,6 +67,7 @@
     <Compile Include="BindingModels\NewOrderBindingModel.cs" />
     <Compile Include="BindingModels\RatingBindingModel.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
+    <Compile Include="ViewModels\MealTypeViewModel.cs" />
     <Compile Include="ViewModels\MealViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\OrdersViewModel.cs" />
