@@ -1,0 +1,9 @@
+Orders
+Admin panel
+Roles
+CSS
+React Auth with roles
+Injector
+Automapper
+Refactoring
+Unit tests
