@@ -11,6 +11,7 @@ import { RestaurantsComponent } from './components/restaurants/restaurants.compo
 import { RestaurantsTownComponent } from './components/restaurants/restaurants-town.component';
 import { RestaurantViewComponent } from './components/restaurants/restaurant-view.component';
 import { MealsComponent } from './components/meals/meals.component';
+import { OrdersComponent } from './components/orders/orders.component';
 
 const history = createHashHistory();
 
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Route path="/restaurants/:townID" component={RestaurantsTownComponent} />
         <Route path="/restaurant/:restaurantID" component={RestaurantViewComponent} />
         <Route path="/meals" component={MealsComponent} />
+        <Route path="/orders" component={OrdersComponent} />
         {/*<Route path='*' component={NotFound} />*/}
       </App>
     </Router>

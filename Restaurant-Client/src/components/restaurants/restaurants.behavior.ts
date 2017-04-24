@@ -61,6 +61,7 @@ export class RestaurantsBehavior {
         post('restaurants', '', data, 'basic')
             .then(function (data) {
                 if (callback) {
+                    observer.showSuccess('Restaurant added successfully.');
                     callback(data);
                 }
             });
@@ -80,6 +81,7 @@ export class RestaurantsBehavior {
 
         post('restaurants', retaurantID + '/rate', body, 'basic')
             .then(function (data) {
+                observer.showSuccess('Restaurant rated with ' + stars + '.');
                 callback(data);
             });
     }
@@ -94,7 +96,18 @@ export class RestaurantsBehavior {
     public deleteMeal(id: number, callback: Function) {
         del("meals", id, 'basic')
             .then(function () {
+                observer.showSuccess('Meal deleted.');
                 callback(true);
+            })
+    }
+
+    public orderMeal(id: number, callback?: Function) {
+        post('meals', id + '/order', { Quantity: 1 }, 'basic')
+            .then(function (data) {
+                observer.showSuccess('Meal ordered.');
+                if (callback) {
+                    callback(data);
+                }
             })
     }
 }

@@ -40,6 +40,7 @@ export class App extends React.Component<any, any> {
                     <Link to="/" className="useronly" id="linkMenuUserHome">Home</Link>
                     <Link to="/restaurants" className="useronly" id="linkMenuShop">Restaurants</Link>
                     <Link to="/meals" className="useronly" id="linkMenuCart">Meals</Link>
+                    <Link to="/orders" className="useronly" id="linkMenuCart">Orders</Link>
                     <Link to="/logout" className="useronly" id="linkMenuLogout">Logout</Link>
                     <Greeting user={this.state.username} />
                 </header>

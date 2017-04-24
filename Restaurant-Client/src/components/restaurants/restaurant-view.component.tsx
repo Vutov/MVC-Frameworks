@@ -51,7 +51,7 @@ export class RestaurantViewComponent extends React.Component<any, any> {
     }
 
     orderMeal(id: number) {
-
+        this.behavior.orderMeal(id);
     }
 
     renderRestaurant() {
@@ -124,6 +124,7 @@ export class RestaurantViewComponent extends React.Component<any, any> {
                 {this.renderRestaurant()}
                 <h2>Meals</h2>
                 {this.renderMeals()}
+                <h3>Rate Restaurant</h3>
                 {this.renderRating()}
             </section>
         )

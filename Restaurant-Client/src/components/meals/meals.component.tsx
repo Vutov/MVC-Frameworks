@@ -79,6 +79,7 @@ export class MealsComponent extends React.Component<any, any> {
     render() {
         return (
             <section>
+                <h1>Add Meal</h1>
                 {this.renderAddMeal()}
             </section>
         )

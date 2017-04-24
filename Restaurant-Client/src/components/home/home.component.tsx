@@ -12,8 +12,9 @@ export class HomeComponent extends React.Component<any, any> {
             return (
                 <section id="viewUserHome">
                     <h1 id="viewUserHomeHeading">Welcome, {this.state.user}!</h1>
-                    <Link to="/shop" id="linkUserHomeShop">Shop</Link>
-                    <Link to="/cart" id="linkUserHomeCart">Cart</Link>
+                    <Link to="/restaurants" id="linkUserHomeShop">Restaurants</Link>
+                    <Link to="/meals" id="linkUserHomeShop">Meals</Link>
+                    <Link to="/orders" id="linkUserHomeCart">Orders</Link>
                 </section>
             )
         } else {

@@ -38,6 +38,7 @@ export class RestaurantsComponent extends React.Component<RestaurantsAddProps, a
     render() {
         return (
             <section>
+                <h1>Add Restaurant</h1>
                 <RestaurantsAddComponent
                     towns={this.state.towns}
                     defaultTownID={this.state.townID}
@@ -47,6 +48,7 @@ export class RestaurantsComponent extends React.Component<RestaurantsAddProps, a
                     updateGrid={this.updateGrid.bind(this)}
                 />
 
+                <h2>All Restaurants</h2>
                 <RestaurantsGridComponent
                     restaurants={this.state.restaurants}
                     history={this.state.history}
