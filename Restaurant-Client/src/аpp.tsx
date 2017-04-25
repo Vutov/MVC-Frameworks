@@ -26,23 +26,30 @@ export class App extends React.Component<any, any> {
 
     render() {
         let navbar = {};
-        if (!this.state.loggedIn) {
+        if (!observer.isLogged()) {
             navbar = (
                 <header id="menu">
                     <Link to="/" className="anonymous" id="linkMenuAppHome">Home</Link>
                     <Link to="/login" className="anonymous" id="linkMenuLogin">Login</Link>
                     <Link to="/register" className="anonymous" id="linkMenuRegister" >Register</Link>
-                  </header>
+                </header>
             );
-        } else {
+        }
+        else {
+            let AdminPanel = null;
+            if (observer.isAdmin()) {
+                AdminPanel = <Link to="/admin" className="adminonly" id="linkMenuUserHome">Admin</Link>
+            }
+
             navbar = (
                 <header id="menu">
                     <Link to="/" className="useronly" id="linkMenuUserHome">Home</Link>
                     <Link to="/restaurants" className="useronly" id="linkMenuShop">Restaurants</Link>
                     <Link to="/meals" className="useronly" id="linkMenuCart">Meals</Link>
                     <Link to="/orders" className="useronly" id="linkMenuCart">Orders</Link>
+                    {AdminPanel}
                     <Link to="/logout" className="useronly" id="linkMenuLogout">Logout</Link>
-                    <Greeting userName={this.state.username} role={this.state.role} history={this.state.history} match={this.state.match} location={this.state.location}/>
+                    <Greeting userName={this.state.username} role={this.state.role} history={this.state.history} match={this.state.match} location={this.state.location} />
                 </header>
             );
         }

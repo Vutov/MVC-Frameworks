@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as $ from "jquery";
 import observer from '../../services/observer';
+import { forIn } from 'lodash'
 
 export default class Infobox extends React.Component<any, any> {
     constructor(props) {
@@ -33,13 +34,22 @@ export default class Infobox extends React.Component<any, any> {
                 if (response.readyState === 0) {
                     errorMsg = "Cannot connect due to network error.";
                 }
-                if (response.responseJSON && response.responseJSON.message) {
-                    errorMsg = response.responseJSON.message;
-                }
+
                 if (response.responseJSON && response.responseJSON.error_description) {
                     errorMsg = response.responseJSON.error_description;
                 }
+
                 if (response.responseJSON && response.responseJSON.modelState) {// errorMsg = response.responseJSON.error_description; // TODO Binding Jquery element and put in lable or somethin`
+                    let models = response.responseJSON.modelState;
+                    let message = response.responseJSON.message;
+                    forIn(models, function (value, key) {
+                        message += ' ' + value;
+                    })
+
+                    errorMsg = message;
+                }
+                else if (response.responseJSON && response.responseJSON.message) {
+                    errorMsg = response.responseJSON.message;
                 }
 
                 this.showError(errorMsg);

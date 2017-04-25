@@ -29,7 +29,6 @@ export class LoginComponent extends React.Component<LoginProps, any> {
                         <input
                             type="text"
                             name="username"
-                            id="loginUsername"
                             value={this.props.username}
                             onChange={this.onChangeHandler.bind(this)}
                             required />
@@ -39,7 +38,6 @@ export class LoginComponent extends React.Component<LoginProps, any> {
                         <input
                             type="password"
                             name="password"
-                            id="loginPasswd"
                             value={this.props.password}
                             onChange={this.onChangeHandler.bind(this)}
                             required />

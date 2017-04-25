@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindingModels\GiveAdminBindingModel.cs" />
     <Compile Include="DbModels\ApplicationUser.cs" />
     <Compile Include="DbModels\MealType.cs" />
     <Compile Include="BindingModels\AccountBindingModels.cs" />
@@ -66,7 +67,7 @@
     <Compile Include="BindingModels\MealBindingModel.cs" />
     <Compile Include="BindingModels\NewOrderBindingModel.cs" />
     <Compile Include="BindingModels\RatingBindingModel.cs" />
-    <Compile Include="ViewModels\AccountViewModels.cs" />
+    <Compile Include="ViewModels\UserViewModel.cs" />
     <Compile Include="ViewModels\MealTypeViewModel.cs" />
     <Compile Include="ViewModels\MealViewModel.cs" />
     <Compile Include="ViewModels\MessageViewModel.cs" />

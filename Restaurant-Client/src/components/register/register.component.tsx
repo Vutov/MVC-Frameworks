@@ -29,7 +29,6 @@ export class RegisterComponent extends React.Component<RegisterProps, any> {
                         <input
                             type="text"
                             name="username"
-                            id="registerUsername"
                             value={this.props.username}
                             onChange={this.onChangeHandler.bind(this)}
                             required />
@@ -39,7 +38,6 @@ export class RegisterComponent extends React.Component<RegisterProps, any> {
                         <input
                             type="password"
                             name="password"
-                            id="registerPasswd"
                             value={this.props.password}
                             onChange={this.onChangeHandler.bind(this)}
                             required />
@@ -49,7 +47,6 @@ export class RegisterComponent extends React.Component<RegisterProps, any> {
                         <input
                             type="password"
                             name="confirmPassword"
-                            id="confirmPasswd"
                             value={this.props.confirmPassword}
                             onChange={this.onChangeHandler.bind(this)}
                             required />
@@ -59,7 +56,6 @@ export class RegisterComponent extends React.Component<RegisterProps, any> {
                         <input
                             type="email"
                             name="email"
-                            id="registerEmail"
                             value={this.props.email}
                             onChange={this.onChangeHandler.bind(this)} 
                             required />

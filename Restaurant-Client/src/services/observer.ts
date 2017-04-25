@@ -1,4 +1,4 @@
-export default  class  Observer {
+export default class Observer {
     public static onSessionUpdate: any = () => undefined;
     public static showLoading: any = () => undefined;
     public static showSuccess: any = () => undefined;
@@ -11,9 +11,19 @@ export default  class  Observer {
 
         this.onSessionUpdate();
     }
-    public static saveRole(role){
+    public static saveRole(role) {
         sessionStorage.setItem('role', role);
-        
+
         this.onSessionUpdate();
+    }
+    public static isAdmin(): boolean {
+        return sessionStorage.getItem('role') === 'Admin';
+    }
+    public static isLogged(): boolean {
+        if (sessionStorage.getItem('username')) {
+            return true;
+        }
+
+        return false;
     }
 }

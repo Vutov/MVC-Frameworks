@@ -1,7 +1,7 @@
 Orders - check
-Admin panel + [Authorize(Roles = "Admin")]
+Admin panel - check
 Roles - check
-Validation errors showing
+Validation errors showing - check
 CSS
 React Auth with roles
 Injector

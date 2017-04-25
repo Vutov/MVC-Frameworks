@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import observer from '../../services/observer'
 import { RestaurantsBehavior } from './restaurants.behavior'
 import { IRestaurantModel } from "./restaurants.model";
 
@@ -85,6 +86,11 @@ export class RestaurantViewComponent extends React.Component<any, any> {
     }
 
     renderMeals() {
+        let DeletHeader = null;
+        if (observer.isAdmin()) {
+            DeletHeader = <th>Delete</th>
+        }
+
         let Meals = (
             <table>
                 <thead>
@@ -92,19 +98,24 @@ export class RestaurantViewComponent extends React.Component<any, any> {
                         <th>Name</th>
                         <th>Type</th>
                         <th>Price</th>
-                        <th>Delete</th>
+                        {DeletHeader}
                         <th>Order</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         this.state.meals.map(function (meal) {
+                            let DeleteMeal = null;
+                            if (observer.isAdmin()) {
+                                DeleteMeal = <td><button onClick={this.deleteMeal.bind(this, meal.id)}>Delete</button></td>
+                            }
+
                             return (
                                 <tr key={meal.id}>
                                     <td>{meal.name}</td>
                                     <td>{meal.type}</td>
                                     <td>{meal.price}</td>
-                                    <td><button onClick={this.deleteMeal.bind(this, meal.id)}>Delete</button></td>
+                                    {DeleteMeal}
                                     <td><button onClick={this.orderMeal.bind(this, meal.id)}>Order</button></td>
                                 </tr>
                             );
