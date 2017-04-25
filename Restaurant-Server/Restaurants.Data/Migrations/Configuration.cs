@@ -1,7 +1,10 @@
 namespace Restaurants.Data.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     using System.Linq;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using Models.DbModels;
 
     internal sealed class Configuration : DbMigrationsConfiguration<RestaurantsContext>
@@ -16,16 +19,48 @@ namespace Restaurants.Data.Migrations
         {
             if (!context.Towns.Any())
             {
-                SeedTowns(context);
+                this.SeedTowns(context);
             }
 
             if (!context.MealTypes.Any())
             {
-                SeedMealTypes(context);
+                this.SeedMealTypes(context);
+            }
+
+            if (!context.Users.Any())
+            {
+                this.SeedUsersAndRoles(context);
             }
         }
 
-        private static void SeedMealTypes(RestaurantsContext context)
+        private void SeedUsersAndRoles(RestaurantsContext context)
+        {
+            this.SeedUser(context, roleName:"Admin", userName: "admin");
+            this.SeedUser(context, roleName:"User", userName: "user");
+            context.SaveChanges();
+        }
+
+        private void SeedUser(RestaurantsContext context, string roleName, string userName)
+        {
+            var userRole = new IdentityRole {Name = roleName, Id = Guid.NewGuid().ToString()};
+            context.Roles.Add(userRole);
+
+            var hasher = new PasswordHasher();
+
+            var user = new ApplicationUser()
+            {
+                UserName = userName,
+                PasswordHash = hasher.HashPassword(userName),
+                Email = $"{userName}@{userName}.com",
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString()
+            };
+
+            user.Roles.Add(new IdentityUserRole {RoleId = userRole.Id, UserId = user.Id});
+            context.Users.Add(user);
+        }
+
+        private void SeedMealTypes(RestaurantsContext context)
         {
             var mealTypes = new[]
             {
@@ -43,7 +78,7 @@ namespace Restaurants.Data.Migrations
             context.SaveChanges();
         }
 
-        private static void SeedTowns(RestaurantsContext context)
+        private void SeedTowns(RestaurantsContext context)
         {
             var towns = new[]
             {

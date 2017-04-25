@@ -72,6 +72,7 @@
     <Compile Include="ViewModels\MessageViewModel.cs" />
     <Compile Include="ViewModels\OrdersViewModel.cs" />
     <Compile Include="ViewModels\RestaurantViewModel.cs" />
+    <Compile Include="ViewModels\RolesViewModel.cs" />
     <Compile Include="ViewModels\TownViewModel.cs" />
     <Compile Include="DbModels\Order.cs" />
     <Compile Include="DbModels\Town.cs" />

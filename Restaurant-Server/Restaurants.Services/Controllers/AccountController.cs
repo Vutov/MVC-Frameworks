@@ -4,26 +4,31 @@
     using System.Threading.Tasks;
     using System.Web.Http;
     using Microsoft.AspNet.Identity;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
     using Microsoft.Owin.Security.Cookies;
     using Models.BindingModels;
     using Models.DbModels;
+    using Providers;
 
     [Authorize]
     [RoutePrefix("api/Account")]
     public class AccountController : ApiController
     {
         private ApplicationUserManager _userManager;
+        private ApplicationRoleManager _appRoleManager = null;
 
         public AccountController()
         {
         }
 
         public AccountController(ApplicationUserManager userManager,
+            ApplicationRoleManager applicationRoleManager,
             ISecureDataFormat<AuthenticationTicket> accessTokenFormat)
         {
             UserManager = userManager;
+            AppRoleManager = applicationRoleManager;
             AccessTokenFormat = accessTokenFormat;
         }
 
@@ -39,8 +44,21 @@
             }
         }
 
+
+        protected ApplicationRoleManager AppRoleManager
+        {
+            get
+            {
+                return this._appRoleManager ?? Request.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+            }
+            private set
+            {
+                this._appRoleManager = value;
+            }
+        }
+
         public ISecureDataFormat<AuthenticationTicket> AccessTokenFormat { get; private set; }
-        
+
         // POST api/Account/Logout
         [Route("Logout")]
         public IHttpActionResult Logout()
@@ -60,6 +78,9 @@
             }
 
             var user = new ApplicationUser() { UserName = model.Username, Email = model.Email };
+
+            var role = await this.AppRoleManager.FindByNameAsync("User");
+            user.Roles.Add(new IdentityUserRole() {RoleId = role.Id, UserId = user.Id});
 
             IdentityResult result = await UserManager.CreateAsync(user, model.Password);
 

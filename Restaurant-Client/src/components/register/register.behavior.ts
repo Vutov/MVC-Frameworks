@@ -1,7 +1,10 @@
-import { post } from '../../services/requester';
+import { get, post } from '../../services/requester';
+import { LoginBehavior } from '../login/login.behavior'
 import observer from '../../services/observer'
 
 export class RegisterBehavior {
+    private loginBehavior: LoginBehavior = new LoginBehavior()
+
     public register(username: string, password: string, confirmPassword: string, email: string, callback: Function) {
         let userData = {
             Username: username,
@@ -19,11 +22,7 @@ export class RegisterBehavior {
                     grant_type: "password"
                 }
 
-                post('account', 'login', loginData)
-                    .then(function (userInfo) {
-                        observer.saveSession(userInfo);
-                        callback(true);
-                    });
-            });
+                this.loginBehavior.login(username, password, callback);
+            }.bind(this));
     }
 }

@@ -11,4 +11,9 @@ export default  class  Observer {
 
         this.onSessionUpdate();
     }
+    public static saveRole(role){
+        sessionStorage.setItem('role', role);
+        
+        this.onSessionUpdate();
+    }
 }

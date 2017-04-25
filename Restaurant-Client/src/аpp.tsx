@@ -18,9 +18,9 @@ export class App extends React.Component<any, any> {
     onSessionUpdate() {
         let name = sessionStorage.getItem("username");
         if (name) {
-            this.setState({ loggedIn: true, username: sessionStorage.getItem("username") });
+            this.setState({ loggedIn: true, username: sessionStorage.getItem("username"), role: sessionStorage.getItem("role") });
         } else {
-            this.setState({ loggedIn: false, username: '' });
+            this.setState({ loggedIn: false, username: '', role: '' });
         }
     }
 
@@ -42,7 +42,7 @@ export class App extends React.Component<any, any> {
                     <Link to="/meals" className="useronly" id="linkMenuCart">Meals</Link>
                     <Link to="/orders" className="useronly" id="linkMenuCart">Orders</Link>
                     <Link to="/logout" className="useronly" id="linkMenuLogout">Logout</Link>
-                    <Greeting user={this.state.username} />
+                    <Greeting userName={this.state.username} role={this.state.role} history={this.state.history} match={this.state.match} location={this.state.location}/>
                 </header>
             );
         }
