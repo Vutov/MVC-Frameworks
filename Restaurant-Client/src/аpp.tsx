@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Link } from "react-router-dom";
-import Greeting from './components/common/greeting';
 import Infobox from './components/common/infobox';
 import observer from './services/observer';
+import { Navbar, Nav, NavItem, NavDropdown, MenuItem, Badge } from 'react-bootstrap'
 
 export class App extends React.Component<any, any> {
     constructor(props) {
@@ -24,44 +24,68 @@ export class App extends React.Component<any, any> {
         }
     }
 
-    render() {
-        let navbar = {};
-        if (!observer.isLogged()) {
-            navbar = (
-                <header id="menu">
-                    <Link to="/" className="anonymous" id="linkMenuAppHome">Home</Link>
-                    <Link to="/login" className="anonymous" id="linkMenuLogin">Login</Link>
-                    <Link to="/register" className="anonymous" id="linkMenuRegister" >Register</Link>
-                </header>
-            );
-        }
-        else {
-            let AdminPanel = null;
-            if (observer.isAdmin()) {
-                AdminPanel = <Link to="/admin" className="adminonly" id="linkMenuUserHome">Admin</Link>
-            }
+    renderAnnonomusNavbar() {
+        return (
+            <Nav>
+                <NavItem eventKey={1}> <Link to="/">Home</Link></NavItem>
+                <NavItem eventKey={2}><Link to="/login">Login</Link></NavItem>
+                <NavItem eventKey={3} ><Link to="/register">Register</Link></NavItem>
+            </Nav>
+        );
+    }
 
-            navbar = (
-                <header id="menu">
-                    <Link to="/" className="useronly" id="linkMenuUserHome">Home</Link>
-                    <Link to="/restaurants" className="useronly" id="linkMenuShop">Restaurants</Link>
-                    <Link to="/meals" className="useronly" id="linkMenuCart">Meals</Link>
-                    <Link to="/orders" className="useronly" id="linkMenuCart">Orders</Link>
-                    {AdminPanel}
-                    <Link to="/logout" className="useronly" id="linkMenuLogout">Logout</Link>
-                    <Greeting userName={this.state.username} role={this.state.role} history={this.state.history} match={this.state.match} location={this.state.location} />
-                </header>
-            );
-        }
+    renderLoggedNavbar() {
+        return (
+            <Nav>
+                <NavItem eventKey={1}> <Link to="/">Home</Link></NavItem>
+                <NavItem eventKey={2}><Link to="/restaurants">Restaurants</Link></NavItem>
+                <NavItem eventKey={3} ><Link to="/meals">Meals</Link></NavItem>
+                <NavItem eventKey={4} ><Link to="/orders">Orders</Link></NavItem>
+                {observer.isAdmin() ? <NavItem eventKey={4} ><Link to="/admin">Admin</Link></NavItem> : null}
+            </Nav>
+        );
+    }
+
+    renderNavbar() {
+        return <Navbar collapseOnSelect>
+            <Navbar.Header>
+                <Navbar.Brand>
+                    <a href="https://softuni.bg/" target='blank'>Software University</a>
+                </Navbar.Brand>
+                <Navbar.Toggle />
+            </Navbar.Header>
+            <Navbar.Collapse>
+                {observer.isLogged() ? this.renderLoggedNavbar() : this.renderAnnonomusNavbar()}
+                <Nav pullRight>
+                    {observer.isLogged() ? <NavItem eventKey={1}><Link to="/logout">Logout</Link></NavItem> : null}
+                </Nav>
+                {observer.isLogged() ? <Navbar.Text pullRight>
+                    <div>Welcome, {this.state.username} <Badge bsStyle="warning">{this.state.role}</Badge></div>
+                </Navbar.Text> : null}
+            </Navbar.Collapse>
+        </Navbar>
+    }
+
+    renderFooter() {
+        return (
+            <footer className='footer'>
+                <div className='container padding-10'>
+                    <div className='text-center'>Shopping System - Simple SPA Application - Web Api, React, TypeScript - Spas Vutov</div>
+                </div>
+            </footer>
+        )
+    }
+
+    render() {
 
         return (
             <div id="app">
-                {navbar}
+                {this.renderNavbar.call(this)}
                 <main id='main'>
                     <Infobox />
                     {this.props.children}
                 </main>
-                <footer>Shopping System - Simple SPA Application</footer>
+                {this.renderFooter.call(this)}
             </div>
         )
     }
