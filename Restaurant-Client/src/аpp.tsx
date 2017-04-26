@@ -27,9 +27,9 @@ export class App extends React.Component<any, any> {
     renderAnnonomusNavbar() {
         return (
             <Nav>
-                <NavItem eventKey={1}> <Link to="/">Home</Link></NavItem>
+                <NavItem eventKey={1}><Link to="/">Home</Link></NavItem>
                 <NavItem eventKey={2}><Link to="/login">Login</Link></NavItem>
-                <NavItem eventKey={3} ><Link to="/register">Register</Link></NavItem>
+                <NavItem eventKey={3}><Link to="/register">Register</Link></NavItem>
             </Nav>
         );
     }
@@ -37,11 +37,11 @@ export class App extends React.Component<any, any> {
     renderLoggedNavbar() {
         return (
             <Nav>
-                <NavItem eventKey={1}> <Link to="/">Home</Link></NavItem>
+                <NavItem eventKey={1}><Link to="/">Home</Link></NavItem>
                 <NavItem eventKey={2}><Link to="/restaurants">Restaurants</Link></NavItem>
-                <NavItem eventKey={3} ><Link to="/meals">Meals</Link></NavItem>
-                <NavItem eventKey={4} ><Link to="/orders">Orders</Link></NavItem>
-                {observer.isAdmin() ? <NavItem eventKey={4} ><Link to="/admin">Admin</Link></NavItem> : null}
+                <NavItem eventKey={3}><Link to="/meals">Meals</Link></NavItem>
+                <NavItem eventKey={4}><Link to="/orders">Orders</Link></NavItem>
+                {observer.isAdmin() ? <NavItem eventKey={5}><Link to="/admin">Admin</Link></NavItem> : null}
             </Nav>
         );
     }
@@ -60,7 +60,7 @@ export class App extends React.Component<any, any> {
                     {observer.isLogged() ? <NavItem eventKey={1}><Link to="/logout">Logout</Link></NavItem> : null}
                 </Nav>
                 {observer.isLogged() ? <Navbar.Text pullRight>
-                    <div>Welcome, {this.state.username} <Badge bsStyle="warning">{this.state.role}</Badge></div>
+                    <span>Welcome, {this.state.username} <Badge bsStyle="warning">{this.state.role}</Badge></span>
                 </Navbar.Text> : null}
             </Navbar.Collapse>
         </Navbar>

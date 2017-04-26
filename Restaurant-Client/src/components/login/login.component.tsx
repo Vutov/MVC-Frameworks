@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { LoginProps } from './login.model'
 import { LoginBehavior } from './login.behavior'
+import { Controls } from '../common/controls'
+import {Button} from 'react-bootstrap'
 
 export class LoginComponent extends React.Component<LoginProps, any> {
 
@@ -14,37 +16,38 @@ export class LoginComponent extends React.Component<LoginProps, any> {
 
     onSubmitHandler(event) {
         event.preventDefault();
-        this.behavior.login(this.state.username, this.state.password, function(){
-          this.props.history.push('/');
+        this.behavior.login(this.state.username, this.state.password, function () {
+            this.props.history.push('/');
         }.bind(this));
     }
 
     render() {
         return (
-            <section id="viewLogin">
-                <h1>Please login</h1>
-                <form id="formLogin" onSubmit={this.onSubmitHandler.bind(this)}>
-                    <label>
-                        <div>Username:</div>
-                        <input
-                            type="text"
-                            name="username"
-                            value={this.props.username}
-                            onChange={this.onChangeHandler.bind(this)}
-                            required />
-                    </label>
-                    <label>
-                        <div>Password:</div>
-                        <input
-                            type="password"
-                            name="password"
-                            value={this.props.password}
-                            onChange={this.onChangeHandler.bind(this)}
-                            required />
-                    </label>
-                    <div>
-                        <input type="submit" value="Login" />
-                    </div>
+            // TODO Center
+            <section className='container'>
+                <h1 className='lead'>Please login:</h1>
+                <form onSubmit={this.onSubmitHandler.bind(this)}>
+                    <Controls.FieldGroup
+                        id="Username"
+                        type="text"
+                        label="Username:"
+                        placeholder="Username"
+                        name="username"
+                        required
+                        onChange={this.onChangeHandler.bind(this)}
+                        value={this.props.username}
+                    />
+                    <Controls.FieldGroup
+                        id="Password"
+                        type="password"
+                        label="Password:"
+                        placeholder="Password"
+                        name="password"
+                        required
+                        onChange={this.onChangeHandler.bind(this)}
+                        value={this.props.username}
+                    />
+                    <Button>Login</Button>
                 </form>
             </section>
         )

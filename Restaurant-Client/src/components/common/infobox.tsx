@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as $ from "jquery";
 import observer from '../../services/observer';
 import { forIn } from 'lodash'
+import { Alert } from 'react-bootstrap'
 
 export default class Infobox extends React.Component<any, any> {
     constructor(props) {
@@ -80,21 +81,23 @@ export default class Infobox extends React.Component<any, any> {
         let className = '';
         switch (this.state.type) {
             case 'loading':
-                className += 'loadingBox';
+                className += 'info';
                 break;
             case 'error':
-                className += 'errorBox';
+                className += 'danger';
                 break;
             case 'success':
-                className += 'infoBox';
+                className += 'success';
                 break;
             default:
                 break;
         }
 
         return (
-            <div id={className} onClick={this.hide.bind(this)}>
-                {this.state.message}
+            <div className='container hoverable'>
+                <Alert bsStyle={className} onClick={this.hide.bind(this)}>
+                    {this.state.message}
+                </Alert>
             </div>
         )
     }
