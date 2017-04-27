@@ -47,7 +47,7 @@ export class App extends React.Component<any, any> {
     }
 
     renderNavbar() {
-        return <Navbar collapseOnSelect justified={true}>
+        return <Navbar collapseOnSelect>
             <Navbar.Header>
                 <Navbar.Brand>
                     <a href="https://softuni.bg/" target='blank'>Software University</a>
