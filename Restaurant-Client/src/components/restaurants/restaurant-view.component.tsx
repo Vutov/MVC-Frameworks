@@ -59,14 +59,14 @@ export class RestaurantViewComponent extends React.Component<any, any> {
         let Restaurant = null;
         if (this.state.restaurant) {
             Restaurant = (
-                <div>
+                <section className='container' >
                     <label>Name</label>
                     <div>{this.state.restaurant.name}</div>
                     <label>Rating</label>
                     <div>{this.state.restaurant.rating === 0 ? "no data" : this.state.restaurant.rating}</div>
                     <label>Town</label>
                     <div><Link to={"/restaurants/" + this.state.restaurant.town.id}>{this.state.restaurant.town.name}</Link></div>
-                </div>
+                </section>
             );
         }
 
