@@ -2,7 +2,7 @@ Orders - check
 Admin panel - check
 Roles - check
 Validation errors showing - check
-CSS
+CSS - check
 React Auth with roles
 Injector
 Automapper

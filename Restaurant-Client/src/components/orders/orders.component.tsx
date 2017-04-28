@@ -2,6 +2,7 @@ import * as React from 'react'
 import { OrdersBehavior } from './orders.behavior'
 import { IOrderModel } from "./orders.model";
 import { Formatter } from "../common/formatters";
+import { Table, Pager } from 'react-bootstrap'
 
 export class OrdersComponent extends React.Component<any, any> {
 
@@ -27,7 +28,7 @@ export class OrdersComponent extends React.Component<any, any> {
         if (index < 0) {
             return;
         }
-        
+
         this.behavior.getOrders(this.state.pageSize, index, function (data: IOrderModel) {
             this.setState({ orders: data, currentIndex: index });
         }.bind(this));
@@ -36,34 +37,38 @@ export class OrdersComponent extends React.Component<any, any> {
     render() {
         return (
             <section>
-                <h1>Top {this.state.pageSize} orders</h1>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Type</th>
-                            <th>Price</th>
-                            <th>Created</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            this.state.orders.map(function (order: IOrderModel) {
-                                return (
-                                    <tr key={order.id}>
-                                        <td>{order.name}</td>
-                                        <td>{order.type}</td>
-                                        <td>{order.price}</td>
-                                        <td>{Formatter.dateFormat(order.createdOn)}</td>
-                                    </tr>
-                                );
-                            }.bind(this))
-                        }
-                    </tbody>
-                </table>
-                <button onClick={this.updateGrid.bind(this, -1)}>&lt;</button>
-                <button onClick={this.updateGrid.bind(this, 0)}>Reload</button>
-                <button onClick={this.updateGrid.bind(this, 1)}>&gt;</button>
+                <div className='container'>
+                    <h1 className='lead'>Top {this.state.pageSize * (this.state.currentIndex + 1)} orders</h1>
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                this.state.orders.map(function (order: IOrderModel) {
+                                    return (
+                                        <tr key={order.id}>
+                                            <td>{order.name}</td>
+                                            <td>{order.type}</td>
+                                            <td>{order.price}</td>
+                                            <td>{Formatter.dateFormat(order.createdOn)}</td>
+                                        </tr>
+                                    );
+                                }.bind(this))
+                            }
+                        </tbody>
+                    </Table>
+                    <Pager>
+                        <Pager.Item previous onClick={this.updateGrid.bind(this, -1)}>&larr; Previous Page</Pager.Item>
+                        <Pager.Item onClick={this.updateGrid.bind(this, 0)}>Reload</Pager.Item>
+                        <Pager.Item next onClick={this.updateGrid.bind(this, 1)}>Next Page &rarr;</Pager.Item>
+                    </Pager>
+                </div>
             </section>
         )
     }

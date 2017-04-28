@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import observer from '../../services/observer'
 import { RestaurantsBehavior } from './restaurants.behavior'
 import { IRestaurantModel } from "./restaurants.model";
+import { Label, Panel, Button, Table, Col, Row } from 'react-bootstrap'
+import { Controls } from "../common/controls";
 
 export class RestaurantViewComponent extends React.Component<any, any> {
 
@@ -59,13 +61,11 @@ export class RestaurantViewComponent extends React.Component<any, any> {
         let Restaurant = null;
         if (this.state.restaurant) {
             Restaurant = (
-                <section className='container' >
-                    <label>Name</label>
-                    <div>{this.state.restaurant.name}</div>
-                    <label>Rating</label>
-                    <div>{this.state.restaurant.rating === 0 ? "no data" : this.state.restaurant.rating}</div>
-                    <label>Town</label>
-                    <div><Link to={"/restaurants/" + this.state.restaurant.town.id}>{this.state.restaurant.town.name}</Link></div>
+                <section>
+                    <Panel header={"Name: " + this.state.restaurant.name}>
+                        <div>{"Rating: " + (this.state.restaurant.rating === 0 ? "no data" : this.state.restaurant.rating)}</div>
+                        <div>Town: <Link to={"/restaurants/" + this.state.restaurant.town.id}>{this.state.restaurant.town.name}</Link></div>
+                    </Panel>
                 </section>
             );
         }
@@ -75,54 +75,55 @@ export class RestaurantViewComponent extends React.Component<any, any> {
 
     renderRating() {
         let Rating = (
-            <form id="formAddStars" onSubmit={this.onSubmitHandler.bind(this)}>
-                <label htmlFor="stars">Rate</label>
-                <input name="stars" type="number" min="1" max="10" onChange={this.onChangeHandler.bind(this)} />
-                <input type="submit" value="Save" />
-            </form>
+            <section>
+                <form onSubmit={this.onSubmitHandler.bind(this)}>
+                    <Controls.FieldGroup
+                        id="Rate"
+                        type="number"
+                        label="Rate:"
+                        placeholder="Rate"
+                        name="stars"
+                        required
+                        min="1"
+                        max="10"
+                        onChange={this.onChangeHandler.bind(this)}
+                    />
+                    <Button type='submit'>Save Rating</Button>
+                </form>
+            </section>
         );
 
         return Rating;
     }
 
     renderMeals() {
-        let DeletHeader = null;
-        if (observer.isAdmin()) {
-            DeletHeader = <th>Delete</th>
-        }
-
         let Meals = (
-            <table>
+            <Table responsive>
                 <thead>
                     <tr>
                         <th>Name</th>
                         <th>Type</th>
                         <th>Price</th>
-                        {DeletHeader}
+                        {observer.isAdmin() ? <th>Delete</th> : null}
                         <th>Order</th>
                     </tr>
                 </thead>
                 <tbody>
                     {
                         this.state.meals.map(function (meal) {
-                            let DeleteMeal = null;
-                            if (observer.isAdmin()) {
-                                DeleteMeal = <td><button onClick={this.deleteMeal.bind(this, meal.id)}>Delete</button></td>
-                            }
-
                             return (
                                 <tr key={meal.id}>
                                     <td>{meal.name}</td>
                                     <td>{meal.type}</td>
                                     <td>{meal.price}</td>
-                                    {DeleteMeal}
-                                    <td><button onClick={this.orderMeal.bind(this, meal.id)}>Order</button></td>
+                                    {observer.isAdmin() ? <td><Button onClick={this.deleteMeal.bind(this, meal.id)}>Delete</Button></td> : null}
+                                    <td><Button onClick={this.orderMeal.bind(this, meal.id)}>Order</Button></td>
                                 </tr>
                             );
                         }.bind(this))
                     }
                 </tbody>
-            </table>
+            </Table>
         );
 
         return Meals;
@@ -130,14 +131,20 @@ export class RestaurantViewComponent extends React.Component<any, any> {
 
     render() {
         return (
-            <section>
-                <h1>Restaurant</h1>
-                {this.renderRestaurant()}
-                <h2>Meals</h2>
-                {this.renderMeals()}
-                <h3>Rate Restaurant</h3>
-                {this.renderRating()}
-            </section>
+            <section className='margin-10'>
+                <Row className="show-grid">
+                    <Col className='container' xs={12} md={5}>
+                        <h1 className='lead'>Restaurant</h1>
+                        {this.renderRestaurant()}
+                        <h3 className='lead'>Rate Restaurant</h3>
+                        {this.renderRating()}
+                    </Col>
+                    <Col className='container' xs={12} md={7}>
+                        <h2 className='lead'>Meals</h2>
+                        {this.renderMeals()}
+                    </Col >
+                </Row>
+            </section >
         )
     }
 }

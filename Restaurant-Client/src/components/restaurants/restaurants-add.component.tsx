@@ -33,7 +33,7 @@ export class RestaurantsAddComponent extends React.Component<RestaurantsAddProps
         return (
             <section className='container'>
                 <form onSubmit={this.onSubmitHandler.bind(this)}>
-                    <FormGroup controlId="formControlsSelect">
+                    <FormGroup>
                         <ControlLabel>City:</ControlLabel>
                         <FormControl componentClass="select" placeholder="City" name='townID' onChange={this.onChangeHandler.bind(this)}>
                             {

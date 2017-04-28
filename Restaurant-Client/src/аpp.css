@@ -80,3 +80,11 @@ body {
 .margin-reset{
     margin: 0 auto;
 }
+
+.padding-top-20{
+    padding-top: 20px;
+}
+
+.margin-10 {
+  margin: 10px;
+}

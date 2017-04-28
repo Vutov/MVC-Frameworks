@@ -1,6 +1,9 @@
 import * as React from 'react'
 import { MealsBehavior } from "./meals.behavior";
 import { ISelectable } from "./meals.model";
+import { Button } from 'react-bootstrap'
+import { Controls } from "../common/controls";
+import { FormGroup, ControlLabel, FormControl } from 'react-bootstrap'
 
 export class MealsComponent extends React.Component<any, any> {
 
@@ -48,39 +51,56 @@ export class MealsComponent extends React.Component<any, any> {
 
     renderAddMeal() {
         return (
-            <form id="formAddMeal" onSubmit={this.onSubmitHandler.bind(this)}>
-                <label htmlFor="name">Name</label>
-                <input required type="text" name='name' onChange={this.onChangeHandler.bind(this)} />
+            <form onSubmit={this.onSubmitHandler.bind(this)}>
+                <Controls.FieldGroup
+                    id="Name"
+                    type="text"
+                    label="Name:"
+                    placeholder="Name"
+                    name="name"
+                    required
+                    onChange={this.onChangeHandler.bind(this)}
+                />
                 {this.renderSelect("Type", "typeID", this.state.types || [])}
                 {this.renderSelect("Restaurant", "restaurantID", this.state.restaurants || [])}
-                <label htmlFor="price">Price</label>
-                <input required type="number" name='price' min="1" max="10000" onChange={this.onChangeHandler.bind(this)} />
-                <input type="submit" value="Save" />
+                <Controls.FieldGroup
+                    id="Price"
+                    type="number"
+                    label="Price:"
+                    placeholder="Price"
+                    name="price"
+                    required
+                    onChange={this.onChangeHandler.bind(this)}
+                    min="1"
+                    max="10000"
+                />
+                <Button type='submit'>Save</Button>
             </form>
         );
     }
 
-    // TODO extact in common
     renderSelect(title: string, name: string, elements: Array<ISelectable>) {
         return (
-            <div>
-                <label htmlFor={name}>{title}</label>
-                <select name={name} onChange={this.onChangeHandler.bind(this)}>
+            <FormGroup>
+                <ControlLabel>{title}</ControlLabel>
+                <FormControl componentClass="select" placeholder={title} name={name} onChange={this.onChangeHandler.bind(this)}>
                     {
                         elements.map(function (e: ISelectable) {
                             return <option key={e.id} value={e.id}>{e.name}</option>
                         }.bind(this))
                     }
-                </select>
-            </div>
+                </FormControl>
+            </FormGroup>
         );
     }
 
     render() {
         return (
             <section>
-                <h1>Add Meal</h1>
-                {this.renderAddMeal()}
+                <div className='container'>
+                    <h1 className='lead'>Add Meal</h1>
+                    {this.renderAddMeal()}
+                </div>
             </section>
         )
     }
