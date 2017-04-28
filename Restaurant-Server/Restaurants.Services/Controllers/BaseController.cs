@@ -2,6 +2,7 @@
 {
     using System.Web.Http;
     using Common;
+    using Data;
     using Data.DataLayer;
     using Infrastructure;
     using Microsoft.Practices.Unity;
@@ -10,7 +11,7 @@
     {
         public BaseController()
         {
-            this.Data = Injector.Instance.Resolve<IRestaurantData>();
+            this.Data = new RestaurantData(new RestaurantsContext()); // EF Dies when using Unity
             this.UserIdProvider = Injector.Instance.Resolve<IUserIdProvider>();
         }
 

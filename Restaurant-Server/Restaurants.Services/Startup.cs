@@ -6,8 +6,6 @@ using Restaurants.Services;
 namespace Restaurants.Services
 {
     using Common;
-    using Data;
-    using Data.DataLayer;
     using Infrastructure;
     using Microsoft.Practices.Unity;
     using Owin;
@@ -22,7 +20,6 @@ namespace Restaurants.Services
 
         private void RegisterDependencies()
         {
-            Injector.Instance.RegisterType<IRestaurantData, RestaurantData>(new InjectionConstructor(new RestaurantsContext()));
             Injector.Instance.RegisterType<IUserIdProvider, AspNetUserIdProvider>();
         }
     }
