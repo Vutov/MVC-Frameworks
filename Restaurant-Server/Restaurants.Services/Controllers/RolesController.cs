@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Net.Http;
     using System.Web.Http;
+    using AutoMapper;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity.Owin;
@@ -37,10 +38,12 @@
             var loggedUserID = this.UserIdProvider.GetUserId();
 
             var roles = this.Data.ApplicationUsers.GetById(loggedUserID).Roles;
-            var rolesViewModel = roles.AsQueryable()
+            var rolesViewModel = roles
+                .AsQueryable()
                 .Select(role => this.AppRoleManager.FindById(role.RoleId))
-                .Select(RolesViewModel.Create)
-                .OrderBy(r => r.Name);
+                .OrderBy(r => r.Name)
+                .AsEnumerable()
+                .Select(Mapper.Map<RolesViewModel>);
 
             return Ok(rolesViewModel);
         }
@@ -50,8 +53,8 @@
         public IHttpActionResult GetUsers()
         {
             var users = this.Data.ApplicationUsers.All();
-            var usersViewModel = users.AsQueryable()
-                .Select(UserViewModel.Create)
+            var usersViewModel = users.AsEnumerable()
+                .Select(Mapper.Map<UserViewModel>)
                 .OrderBy(u => u.Username);
 
             return this.Ok(usersViewModel);

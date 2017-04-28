@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using System.Web.Http;
+    using AutoMapper;
     using Microsoft.AspNet.Identity;
     using Models.BindingModels;
     using Models.DbModels;
@@ -46,67 +47,12 @@
             restaurant.Meals.Add(meal);
             this.Data.SaveChanges();
 
-            var viewModel = new MealViewModel()
-            {
-                Id = meal.Id,
-                Name = meal.Name,
-                Price = meal.Price,
-                Type = meal.Type.Name
-            };
-
-            return this.Created("http://localhost:1337/api/meals/" + meal.Id, viewModel);
+            var viewModel = Mapper.Map<MealViewModel>(meal);
+            return this.Created("/api/meals/" + meal.Id, viewModel);
         }
 
         [Route("{id}")]
-        [Authorize]
-        public IHttpActionResult PutEditMeal([FromUri] int id, [FromBody] EditMealBindingModel model)
-        {
-            var meal = this.Data.Meals.GetById(id);
-            if (meal == null)
-            {
-                return this.NotFound();
-            }
-
-            var userId = this.User.Identity.GetUserId();
-            if (meal.Restaurant.OwnerId != userId)
-            {
-                return this.Unauthorized();
-            }
-
-            if (model == null)
-            {
-                return this.BadRequest();
-            }
-
-            if (!this.ModelState.IsValid)
-            {
-                return this.BadRequest(this.ModelState);
-            }
-
-            var type = this.Data.MealTypes.GetById(model.TypeId);
-            if (type == null)
-            {
-                return this.BadRequest("Meal type with id " + model.TypeId + " does not exist!");
-            }
-
-            meal.Name = model.Name;
-            meal.Price = model.Price;
-            meal.Type = type;
-            this.Data.SaveChanges();
-
-            var viewModel = new MealViewModel()
-            {
-                Id = meal.Id,
-                Name = meal.Name,
-                Price = meal.Price,
-                Type = meal.Type.Name
-            };
-
-            return this.Ok(viewModel);
-        }
-
-        [Route("{id}")]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         public IHttpActionResult DeleteMeal([FromUri] int id)
         {
             var meal = this.Data.Meals.GetById(id);
@@ -136,8 +82,8 @@
         public IHttpActionResult GetMealTypes()
         {
             var types = this.Data.MealTypes.All();
-            var viewModel = types.AsQueryable()
-                .Select(MealTypeViewModel.Create)
+            var viewModel = types.AsEnumerable()
+                .Select(Mapper.Map<MealTypeViewModel>)
                 .OrderBy(m => m.Id);
 
             return this.Ok(viewModel);

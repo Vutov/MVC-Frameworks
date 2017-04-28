@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Http;
+    using AutoMapper;
     using Models.BindingModels;
     using Models.DbModels;
     using Models.ViewModels;
@@ -19,11 +20,7 @@
                 return this.NotFound();
             }
 
-            var viewModel = new List<Restaurant>() { restourant }.AsQueryable()
-                .Select(RestaurantViewModel.Create)
-                .OrderByDescending(r => r.Rating)
-                .ThenBy(r => r.Name)
-                .First();
+            var viewModel = Mapper.Map<RestaurantViewModel>(restourant);
             return this.Ok(viewModel);
         }
 
@@ -36,8 +33,8 @@
                 return this.Ok(new List<RestaurantViewModel>());
             }
 
-            var viewModel = restourants.Restaurants.AsQueryable()
-                .Select(RestaurantViewModel.Create)
+            var viewModel = restourants.Restaurants.AsEnumerable()
+                .Select(Mapper.Map<RestaurantViewModel>)
                 .OrderByDescending(r => r.Rating)
                 .ThenBy(r => r.Name);
             return this.Ok(viewModel);
@@ -76,19 +73,8 @@
             town.Restaurants.Add(restaurant);
             this.Data.SaveChanges();
 
-            var viewModel = new RestaurantViewModel()
-            {
-                Id = restaurant.Id,
-                Name = restaurant.Name,
-                Rating = null,
-                Town = new TownViewModel()
-                {
-                    Id = town.Id,
-                    Name = town.Name
-                }
-            };
-
-            return this.Created("http://localhost:1337/api/restaurants/" + town.Id, viewModel);
+            var viewModel = Mapper.Map<RestaurantViewModel>(restaurant);
+            return this.Created("api/restaurants/" + town.Id, viewModel);
         }
 
         [Route("{id}/rate")]
@@ -145,11 +131,10 @@
                 return this.NotFound();
             }
 
-            var viewModel = restaurant.Meals.AsQueryable()
-                .Select(MealViewModel.Create)
+            var viewModel = restaurant.Meals.AsEnumerable()
+                .Select(Mapper.Map<MealViewModel>)
                 .OrderBy(m => m.Type)
                 .ThenBy(m => m.Name);
-
             return this.Ok(viewModel);
         }
 
@@ -158,8 +143,8 @@
         {
             var towns = this.Data.Towns.All();
 
-            var viewModel = towns.AsQueryable()
-                .Select(TownViewModel.Create)
+            var viewModel = towns.AsEnumerable()
+                .Select(Mapper.Map<TownViewModel>)
                 .OrderBy(m => m.Id)
                 .ThenBy(m => m.Name);
 
@@ -171,8 +156,8 @@
         {
             var restaurants = this.Data.Restaurants.All();
 
-            var viewModel = restaurants.AsQueryable()
-                .Select(RestaurantViewModel.Create)
+            var viewModel = restaurants.AsEnumerable()
+                .Select(Mapper.Map<RestaurantViewModel>)
                 .OrderBy(m => m.Id)
                 .ThenBy(m => m.Name);
 

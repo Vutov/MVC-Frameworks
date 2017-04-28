@@ -3,8 +3,8 @@ Admin panel - check
 Roles - check
 Validation errors showing - check
 CSS - check
-React Auth with roles
+TODO React Auth with roles
 Injector - unity, check
-Automapper
-Refactoring
-Unit tests
+Automapper - check
+TODO Refactoring
+TODO Unit tests

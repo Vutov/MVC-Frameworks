@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Web.Http;
+    using AutoMapper;
     using Microsoft.AspNet.Identity;
     using Models.BindingModels;
     using Models.DbModels;
@@ -38,7 +39,7 @@
             {
                 Meal = meal,
                 CreatedOn = DateTime.Now,
-                OrderStatus = OrderStatus.Pending, //?,
+                OrderStatus = OrderStatus.Pending,
                 Quantity = model.Quantity,
                 User = user
             };
@@ -68,11 +69,12 @@
                 return this.BadRequest();
             }
 
-            orders = orders.OrderByDescending(o => o.CreatedOn);
-            var viewModel = orders
+            var viewModel = orders.AsQueryable()
+                .OrderByDescending(o => o.CreatedOn)
                 .Skip(startPage * limit)
                 .Take(limit)
-                .Select(OrdersViewModel.Create);
+                .AsEnumerable()
+                .Select(Mapper.Map<OrdersViewModel>);
             return this.Ok(viewModel);
         }
     }
