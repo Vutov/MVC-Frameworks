@@ -56,7 +56,7 @@
             [FromUri] int? mealId = null)
         {
             var userId = this.User.Identity.GetUserId();
-            var orders = this.Data.Orders.All()
+            var orders = this.Data.Orders.All().AsQueryable()
                 .Where(o => o.UserId == userId && o.OrderStatus == OrderStatus.Pending);
             if (mealId != null)
             {
