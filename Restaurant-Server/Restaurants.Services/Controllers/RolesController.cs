@@ -1,12 +1,8 @@
 ﻿namespace Restaurants.Services.Controllers
 {
-    using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
     using System.Web.Http;
-    using Data;
-    using Data.DataLayer;
-    using Infrastructure;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.AspNet.Identity.Owin;
@@ -23,8 +19,7 @@
         {
         }
 
-        // TODO injector
-        public RolesController(ApplicationRoleManager applicationRoleManager) : base(new RestaurantData(new RestaurantsContext()), new AspNetUserIdProvider())
+        public RolesController(ApplicationRoleManager applicationRoleManager)
         {
             AppRoleManager = applicationRoleManager;
         }

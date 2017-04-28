@@ -1,22 +1,23 @@
 ﻿namespace Restaurants.Services.Controllers
 {
     using System.Web.Http;
-    using Data;
+    using Common;
     using Data.DataLayer;
     using Infrastructure;
+    using Microsoft.Practices.Unity;
 
     public class BaseController : ApiController
     {
-        // TODO Services?, mapper, injector, change this.Created
+        public BaseController()
+        {
+            this.Data = Injector.Instance.Resolve<IRestaurantData>();
+            this.UserIdProvider = Injector.Instance.Resolve<IUserIdProvider>();
+        }
+
         public BaseController(IRestaurantData data, IUserIdProvider idProvider)
         {
             this.Data = data;
             this.UserIdProvider = idProvider;
-        }
-
-        public BaseController()
-            : this(new RestaurantData(new RestaurantsContext()), new AspNetUserIdProvider())
-        {
         }
 
         protected IRestaurantData Data { get; set; }

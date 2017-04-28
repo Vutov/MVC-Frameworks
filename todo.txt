@@ -4,7 +4,7 @@ Roles - check
 Validation errors showing - check
 CSS - check
 React Auth with roles
-Injector
+Injector - unity, check
 Automapper
 Refactoring
 Unit tests
