@@ -39,7 +39,6 @@ export class HomeComponent extends React.Component<any, any> {
     }
 
     render() {
-
         let title = <h1>Welcome {observer.isLogged() ? ", " + this.state.user + "!" : null}</h1>;
         return (
             <section className='container'>

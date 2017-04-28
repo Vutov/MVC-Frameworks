@@ -13,6 +13,7 @@ import { RestaurantViewComponent } from './components/restaurants/restaurant-vie
 import { MealsComponent } from './components/meals/meals.component';
 import { OrdersComponent } from './components/orders/orders.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { NotFoundComponent } from "./components/common/not-found.component";
 
 const history = createHashHistory();
 
@@ -30,7 +31,7 @@ ReactDOM.render(
         <Route path="/meals" component={MealsComponent} />
         <Route path="/orders" component={OrdersComponent} />
         <Route path="/admin" component={AdminPanelComponent} />
-        {/*<Route path='*' component={NotFound} />*/}
+        {/*<Route path='*' component={NotFoundComponent} />*/}
       </App>
     </Router>
   </HashRouter>
