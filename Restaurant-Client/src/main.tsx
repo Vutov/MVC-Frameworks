@@ -18,13 +18,18 @@ import { NotFoundComponent } from "./components/common/not-found.component";
 
 const history = createHashHistory();
 
-const Authorized = ({ component: Component, isAllowed = false, redirectHome = false, ...rest }) => (
+enum RouteType {
+  Admin,
+  User
+}
+
+const Authorized = ({ component: Component, routeType, ...rest }) => (
   <Route {...rest} render={renderProps => (
-    isAllowed ? (
+    (routeType == RouteType.User && observer.isLogged()) || (routeType == RouteType.Admin && observer.isAdmin()) ? (
       <Component {...renderProps} />
     ) : (
         <Redirect to={{
-          pathname: redirectHome ? '/' : '/login',
+          pathname: observer.isLogged() && !observer.isAdmin() ? '/' : '/login',
           state: { from: renderProps.location }
         }} />
       )
@@ -39,13 +44,13 @@ ReactDOM.render(
           <Route path="/" exact={true} component={HomeComponent} />
           <Route path="/login" component={LoginComponent} />
           <Route path="/register" component={RegisterComponent} />
-          <Authorized isAllowed={observer.isLogged()} path="/logout" component={LogoutComponent} />
-          <Authorized isAllowed={observer.isLogged()} path="/restaurants" exact={true} component={RestaurantsComponent} />
-          <Authorized isAllowed={observer.isLogged()} path="/restaurants/:townID" component={RestaurantsTownComponent} />
-          <Authorized isAllowed={observer.isLogged()} path="/restaurant/:restaurantID" component={RestaurantViewComponent} />
-          <Authorized isAllowed={observer.isLogged()} path="/meals" component={MealsComponent} />
-          <Authorized isAllowed={observer.isLogged()} path="/orders" component={OrdersComponent} />
-          <Authorized isAllowed={observer.isAdmin()} redirectHome={observer.isLogged()} path="/admin" component={AdminPanelComponent} />
+          <Authorized routeType={RouteType.User} path="/logout" component={LogoutComponent} />
+          <Authorized routeType={RouteType.User} path="/restaurants" exact={true} component={RestaurantsComponent} />
+          <Authorized routeType={RouteType.User} path="/restaurants/:townID" component={RestaurantsTownComponent} />
+          <Authorized routeType={RouteType.User} path="/restaurant/:restaurantID" component={RestaurantViewComponent} />
+          <Authorized routeType={RouteType.User} path="/meals" component={MealsComponent} />
+          <Authorized routeType={RouteType.User} path="/orders" component={OrdersComponent} />
+          <Authorized routeType={RouteType.Admin} path="/admin" component={AdminPanelComponent} />
           <Route component={NotFoundComponent} />
         </Switch>
       </App>
