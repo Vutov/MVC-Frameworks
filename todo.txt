@@ -5,8 +5,8 @@ Validation errors showing - check
 CSS - check
 Injector - unity, check
 Automapper - check
+Refactoring - check
+Unit tests - check
 
 TODO React Auth with roles
 TODO Not Found Route
-TODO Refactoring
-TODO Unit tests

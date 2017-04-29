@@ -78,6 +78,48 @@
             return this.Ok(viewModel);
         }
 
+        [Route("{id}")]
+        [Authorize]
+        public IHttpActionResult PutEditMeal([FromUri] int id, [FromBody] EditMealBindingModel model)
+        {
+            var meal = this.Data.Meals.GetById(id);
+            if (meal == null)
+            {
+                return this.NotFound();
+            }
+
+            var userId = this.User.Identity.GetUserId();
+            if (meal.Restaurant.OwnerId != userId)
+            {
+                return this.Unauthorized();
+            }
+
+            if (model == null)
+            {
+                return this.BadRequest();
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return this.BadRequest(this.ModelState);
+            }
+
+            var type = this.Data.MealTypes.GetById(model.TypeId);
+            if (type == null)
+            {
+                return this.BadRequest("Meal type with id " + model.TypeId + " does not exist!");
+            }
+
+            meal.Name = model.Name;
+            meal.Price = model.Price;
+            meal.Type = type;
+            this.Data.SaveChanges();
+
+            var viewModel = Mapper.Map<MealViewModel>(meal);
+
+            return this.Ok(viewModel);
+        }
+
         [Route("types")]
         public IHttpActionResult GetMealTypes()
         {

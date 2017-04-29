@@ -4,6 +4,8 @@
     using System.Linq;
     using System.Web.Http;
     using AutoMapper;
+    using Data.DataLayer;
+    using Infrastructure;
     using Models.BindingModels;
     using Models.DbModels;
     using Models.ViewModels;
@@ -11,6 +13,14 @@
     [RoutePrefix("api/restaurants")]
     public class RestaurantsController : BaseController
     {
+        public RestaurantsController() : base()
+        {
+        }
+
+        public RestaurantsController(IRestaurantData data, IUserIdProvider idProvider) : base(data, idProvider)
+        {
+        }
+
         [Route("")]
         public IHttpActionResult GetRestaurant(int restaurantId)
         {

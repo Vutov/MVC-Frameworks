@@ -6,16 +6,19 @@
     using System.Net;
     using System.Net.Http;
     using System.Web.Http;
+    using AutoMapper;
     using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.Owin.Testing;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Owin;
     using Data;
+    using Microsoft.Practices.Unity;
     using Models;
-    using Restaurants.Models;
     using Restaurants.Models.DbModels;
     using Restaurants.Models.ViewModels;
     using Services;
+    using Services.Common;
+    using Services.Infrastructure;
 
     [TestClass]
     public class MealsIntegrationTests
@@ -49,6 +52,25 @@
         [AssemblyInitialize]
         public static void AssemblyInit(TestContext context)
         {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Meal, MealViewModel>()
+                    .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.Name));
+                cfg.CreateMap<Order, OrdersViewModel>()
+                    .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.OrderStatus))
+                    .ForMember(dest => dest.Meal, opt => opt.ResolveUsing(src => Mapper.Map<MealViewModel>(src.Meal)));
+                cfg.CreateMap<Town, TownViewModel>();
+                cfg.CreateMap<Restaurant, RestaurantViewModel>()
+                    .ForMember(dest => dest.Rating, opt => opt.ResolveUsing(src => src.Ratings.Count == 0 ? 0 : src.Ratings.Select(ra => ra.Stars).Average()));
+                cfg.CreateMap<IdentityRole, RolesViewModel>();
+                cfg.CreateMap<MealType, MealTypeViewModel>();
+                cfg.CreateMap<ApplicationUser, UserViewModel>()
+                        .ForMember(dest => dest.ID, opt => opt.MapFrom(src => src.Id))
+                        .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.UserName));
+            });
+
+            Injector.Instance.RegisterType<IUserIdProvider, AspNetUserIdProvider>();
+
             ClearDatabase();
 
             httpTestServer = TestServer.Create(appBuilder =>
@@ -69,17 +91,15 @@
         [AssemblyCleanup]
         public static void AssemblyCleanup()
         {
-            if (httpTestServer != null)
-            {
-                httpTestServer.Dispose();
-            }
+            httpTestServer?.Dispose();
 
             ClearDatabase();
         }
 
         [TestMethod]
-        public void EditMealWhenLoggedWithProperUserAndAllDataIsValidShouldReturnOkAndEditedMeal()
+        public void EditMeal_WhenLoggedWithProperUserAndAllDataIsValid_ShouldReturnOkAndEditedMeal()
         {
+            // Arrange
             var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("name", "Edited"),
@@ -90,7 +110,10 @@
             var meal = context.Meals.FirstOrDefault(m => m.Name == "Valid 1");
             Assert.IsNotNull(meal);
 
+            // Act
             var response = this.EditMealByIdLogged(meal.Id, data);
+
+            // Assert
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
             var returnedMeal = response.Content.ReadAsAsync<MealViewModel>().Result;
             Assert.AreEqual(returnedMeal.Name, "Edited");
@@ -100,8 +123,9 @@
         }
 
         [TestMethod]
-        public void EditMealWhenLoggedWithInvalidIdShouldReturn404()
+        public void EditMeal_WhenLoggedWithInvalidId_ShouldReturn404()
         {
+            // Arrange
             var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("name", "Edited"),
@@ -111,13 +135,18 @@
             var context = new RestaurantsContext();
             var meal = context.Meals.FirstOrDefault(m => m.Id == int.MaxValue);
             Assert.IsNull(meal);
+
+            // Act
             var response = this.EditMealByIdLogged(int.MaxValue, data);
+
+            // Assert
             Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         [TestMethod]
-        public void EditMealWhenNotLoggedShouldReturn401()
+        public void EditMeal_WhenNotLogged_ShouldReturn401()
         {
+            // Arrange
             var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("name", "Edited"),
@@ -128,13 +157,17 @@
             var meal = context.Meals.FirstOrDefault(m => m.Name == "Valid 2");
             Assert.IsNotNull(meal);
 
+            // Act
             var response = this.EditMealByIdNotLogged(meal.Id, data);
+
+            // Assert
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [TestMethod]
-        public void EditMealWhenNotRestourantOwnerShouldReturn401()
+        public void EditMeal_WhenNotRestourantOwner_ShouldReturn401()
         {
+            // Arrange
             var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("name", "Edited"),
@@ -146,13 +179,17 @@
             Assert.IsNotNull(meal);
             Assert.IsTrue(meal.Restaurant.Owner.UserName != Username);
 
+            // Act
             var response = this.EditMealByIdLogged(meal.Id, data);
+
+            // Assert
             Assert.AreEqual(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
         [TestMethod]
-        public void EditMealWhenLoggedWithInvalidMealNameShouldReturn400BadRequest()
+        public void EditMeal_WhenLoggedWithInvalidMealName_ShouldReturn400BadRequest()
         {
+            // Arrange
             var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("name", ""),
@@ -162,13 +199,18 @@
             var context = new RestaurantsContext();
             var meal = context.Meals.FirstOrDefault(m => m.Name == "Valid 2");
             Assert.IsNotNull(meal);
+
+            // Act
             var response = this.EditMealByIdLogged(meal.Id, data);
+
+            // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [TestMethod]
-        public void EditMealWhenLoggedWithInvalidDataShouldReturn400BadRequest()
+        public void EditMeal_WhenLoggedWithInvalidData_ShouldReturn400BadRequest()
         {
+            // Arrange
             var data = new FormUrlEncodedContent(new[]
             {
                 new KeyValuePair<string, string>("Price", "5.10"),
@@ -176,13 +218,18 @@
             var context = new RestaurantsContext();
             var meal = context.Meals.FirstOrDefault(m => m.Name == "Valid 2");
             Assert.IsNotNull(meal);
+
+            // Act
             var response = this.EditMealByIdLogged(meal.Id, data);
+
+            // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 
         [TestMethod]
-        public void EditMealWhenLoggedWithInvalidTypeIdShouldReturn400BadRequest()
+        public void EditMeal_WhenLoggedWithInvalidTypeId_ShouldReturn400BadRequest()
         {
+            // Arrange
             var data = new FormUrlEncodedContent(new[]
             {
                  new KeyValuePair<string, string>("name", "Edited"),
@@ -194,7 +241,11 @@
             Assert.IsNotNull(meal);
             var mealType = context.MealTypes.FirstOrDefault(m => m.Id == int.MaxValue);
             Assert.IsNull(mealType);
+
+            // Act
             var response = this.EditMealByIdLogged(meal.Id, data);
+
+            // Assert
             Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
         }
 

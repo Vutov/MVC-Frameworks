@@ -6,11 +6,12 @@
     using System.Net.Http;
     using System.Threading;
     using System.Web.Http;
+    using AutoMapper;
     using Data.DataLayer;
     using Data.Repositories;
+    using Microsoft.AspNet.Identity.EntityFramework;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using Restaurants.Models;
     using Restaurants.Models.BindingModels;
     using Restaurants.Models.DbModels;
     using Restaurants.Models.ViewModels;
@@ -20,8 +21,22 @@
     [TestClass]
     public class RestaurantsControllerTests
     {
+        [TestInitialize]
+        public void Init()
+        {
+            Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Meal, MealViewModel>()
+                    .ForMember(dest => dest.Type, opt => opt.MapFrom(src => src.Type.Name));
+                cfg.CreateMap<Town, TownViewModel>();
+                cfg.CreateMap<Restaurant, RestaurantViewModel>()
+                    .ForMember(dest => dest.Rating, opt => opt.ResolveUsing(src => src.Ratings.Count == 0 ? 0 : src.Ratings.Select(ra => ra.Stars).Average()));
+                cfg.CreateMap<MealType, MealTypeViewModel>();
+            });
+        }
+
         [TestMethod]
-        public void GetAllRestaurantsWhenHasSuchTownAndOnlyOneRestaurantShouldReturnOkAndOneRestaurant()
+        public void GetAllRestaurants_WhenHasSuchTownAndOnlyOneRestaurant_ShouldReturnOkAndOneRestaurant()
         {
             // Setup fake restaurants
             var user = new ApplicationUser() { Id = "1", UserName = "Fake User", PasswordHash = "1234" };
@@ -65,9 +80,11 @@
             mockedContext.Setup(c => c.Towns).Returns(mockedRepository.Object);
 
             // Setup controller
-            var controller = new RestaurantsController(mockedContext.Object, new AspNetUserIdProvider());
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            var controller = new RestaurantsController(mockedContext.Object, new AspNetUserIdProvider())
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             var response = controller.GetRestaurantsByTown(1).ExecuteAsync(CancellationToken.None).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -84,7 +101,7 @@
         }
 
         [TestMethod]
-        public void GetAllRestaurantsWhenHasSuchTownAndMoreThanOneRestaurantShouldReturnOkAndOrderTheRestaurants()
+        public void GetAll_RestaurantsWhenHasSuchTownAndMoreThanOneRestaurant_ShouldReturnOkAndOrderTheRestaurants()
         {
             // Setup fake restaurants
             var user = new ApplicationUser() { Id = "1", UserName = "Fake User", PasswordHash = "1234" };
@@ -170,9 +187,11 @@
             mockedContext.Setup(c => c.Towns).Returns(mockedRepository.Object);
 
             // Setup controller
-            var controller = new RestaurantsController(mockedContext.Object, new AspNetUserIdProvider());
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            var controller = new RestaurantsController(mockedContext.Object, new AspNetUserIdProvider())
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             var response = controller.GetRestaurantsByTown(1).ExecuteAsync(CancellationToken.None).Result;
             Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
@@ -191,7 +210,7 @@
         }
 
         [TestMethod]
-        public void GetAllRestaurantsWhenHasNoSuchTownShouldReturnOkAndEmptyList()
+        public void GetAll_RestaurantsWhenHasNoSuchTown_ShouldReturnOkAndEmptyList()
         {
             // Setup repositories
             var mockedRepository = new Mock<IRepository<Town>>();
@@ -219,7 +238,7 @@
         }
 
         [TestMethod]
-        public void RateRestaurantWIthValidDataShouldReturnOk()
+        public void RateRestaurant_WhenValidData_ShouldReturnOk()
         {
             // Setup fake restaurants
             var user = new ApplicationUser() { Id = "1", UserName = "Fake User", PasswordHash = "1234" };
@@ -249,9 +268,11 @@
             mockedProvider.Setup(p => p.GetUserId()).Returns("10");
 
             // Setup controller
-            var controller = new RestaurantsController(mockedContext.Object, mockedProvider.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            var controller = new RestaurantsController(mockedContext.Object, mockedProvider.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             var response = controller.PostRateExistingRestaurant(1, new RatingBindingModel()
             {
@@ -265,7 +286,7 @@
         }
 
         [TestMethod]
-        public void RateRestaurantWithInvalidIdShouldReturnNotFound()
+        public void RateRestaurant_WhenInvalidId_ShouldReturnNotFound()
         {
             // Setup repositories
             var mockedRepository = new Mock<IRepository<Restaurant>>();
@@ -280,9 +301,11 @@
             mockedProvider.Setup(p => p.GetUserId()).Returns("10");
 
             // Setup controller
-            var controller = new RestaurantsController(mockedContext.Object, mockedProvider.Object);
-            controller.Request = new HttpRequestMessage();
-            controller.Configuration = new HttpConfiguration();
+            var controller = new RestaurantsController(mockedContext.Object, mockedProvider.Object)
+            {
+                Request = new HttpRequestMessage(),
+                Configuration = new HttpConfiguration()
+            };
 
             var response = controller.PostRateExistingRestaurant(1, new RatingBindingModel()
             {
@@ -293,7 +316,7 @@
         }
 
         [TestMethod]
-        public void RateRestaurantWithValidIdButOwnerRatingHisRestaurantShouldReturnBadRequest()
+        public void RateRestaurant_WhenValidIdButOwnerRatingHisRestaurant_ShouldReturnBadRequest()
         {
             // Setup fake restaurants
             var user = new ApplicationUser() { Id = "1", UserName = "Fake User", PasswordHash = "1234" };
@@ -338,7 +361,7 @@
         }
 
         [TestMethod]
-        public void RateRestaurantWhenAllReadyRatedWIthValidDataShouldReturnOkAndOverridePreviousRating()
+        public void RateRestaurant_WhenAllReadyRatedWIthValidData_ShouldReturnOkAndOverridePreviousRating()
         {
             // Setup fake restaurants
             var user = new ApplicationUser() { Id = "1", UserName = "Fake User", PasswordHash = "1234" };

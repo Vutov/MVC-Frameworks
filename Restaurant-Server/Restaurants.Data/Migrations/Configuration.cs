@@ -2,6 +2,8 @@ namespace Restaurants.Data.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
+    using System.Data.Entity.Validation;
+    using System.Diagnostics;
     using System.Linq;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -35,15 +37,19 @@ namespace Restaurants.Data.Migrations
 
         private void SeedUsersAndRoles(RestaurantsContext context)
         {
-            this.SeedUser(context, roleName:"Admin", userName: "admin");
-            this.SeedUser(context, roleName:"User", userName: "user");
+            this.SeedUser(context, roleName: "Admin", userName: "admin");
+            this.SeedUser(context, roleName: "User", userName: "user");
             context.SaveChanges();
         }
 
         private void SeedUser(RestaurantsContext context, string roleName, string userName)
         {
-            var userRole = new IdentityRole {Name = roleName, Id = Guid.NewGuid().ToString()};
-            context.Roles.Add(userRole);
+            var role = context.Roles.FirstOrDefault(r => r.Name == roleName);
+            if (role == null)
+            {
+                role = new IdentityRole {Name = roleName, Id = Guid.NewGuid().ToString()};
+                context.Roles.Add(role);
+            }
 
             var hasher = new PasswordHasher();
 
@@ -56,7 +62,7 @@ namespace Restaurants.Data.Migrations
                 SecurityStamp = Guid.NewGuid().ToString()
             };
 
-            user.Roles.Add(new IdentityUserRole {RoleId = userRole.Id, UserId = user.Id});
+            user.Roles.Add(new IdentityUserRole {RoleId = role.Id, UserId = user.Id});
             context.Users.Add(user);
         }
 
