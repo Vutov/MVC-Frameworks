@@ -13,7 +13,7 @@ module.exports = {
 
   entry: [
     './main.tsx',
-    '../node_modules/bootstrap/dist/css/bootstrap.css',
+    // '../node_modules/bootstrap/dist/css/bootstrap.css',
     './аpp.css'
   ],
   output: {

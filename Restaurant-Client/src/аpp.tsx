@@ -60,7 +60,7 @@ export class App extends React.Component<any, any> {
                     {observer.isLogged() ? <NavItem eventKey={1}><Link to="/logout">Logout</Link></NavItem> : null}
                 </Nav>
                 {observer.isLogged() ? <Navbar.Text pullRight>
-                    <span>Welcome, {this.state.username} <Badge bsStyle="warning">{this.state.role}</Badge></span>
+                    <span>Welcome, {this.state.username} <Badge>{this.state.role}</Badge></span>
                 </Navbar.Text> : null}
             </Navbar.Collapse>
         </Navbar>
